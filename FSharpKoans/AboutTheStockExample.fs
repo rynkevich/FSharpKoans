@@ -60,6 +60,21 @@ module ``about the stock example`` =
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+        let splitCommas (x : string) =
+            x.Split([|','|])
+
+        let splittedStockValues = 
+            List.skip 1 stockData 
+            |> List.map splitCommas
+        let openCloseStockValues = 
+            [for data in splittedStockValues do 
+                yield List.map double [data.[1]; data.[4]]]
+        let maxOpenCloseDiffIndex = 
+            openCloseStockValues
+            |> List.mapi (fun i x -> i, x)
+            |> List.maxBy (fun x -> (snd x).[1] - (snd x).[0])
+            |> fst
+
+        let result = splittedStockValues.[maxOpenCloseDiffIndex].[0]
         
         AssertEquality "2012-03-13" result
